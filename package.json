@@ -1,0 +1,38 @@
+{
+  "name": "journal",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest",
+    "android": "cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug"
+  },
+  "dependencies": {
+    "apollo-boost": "^0.3.1",
+    "apollo-link-error": "^1.1.10",
+    "graphql": "^14.2.1",
+    "graphql-tag": "^2.10.1",
+    "hoist-non-react-statics": "^3.3.0",
+    "react": "16.8.3",
+    "react-apollo": "^2.5.4",
+    "react-native": "0.57.5",
+    "react-native-navigation": "^2.17.0",
+    "react-native-vector-icons": "^6.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/runtime": "^7.4.3",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.7.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-native": "^3.6.0",
+    "jest": "^24.7.1",
+    "metro-react-native-babel-preset": "^0.53.1",
+    "react-test-renderer": "16.8.3"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
