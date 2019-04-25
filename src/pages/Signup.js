@@ -1,4 +1,4 @@
-import { Query, graphql } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import React, { Component } from 'react';
 import { Text, View, 
   StyleSheet, 
@@ -8,7 +8,6 @@ import { Text, View,
   Keyboard,
   AsyncStorage
 } from 'react-native';
-
 import { signUpMutation } from '../schemas';
 import { redirectHome } from '../navigation';
 
@@ -31,7 +30,6 @@ class SignUp extends Component {
 
   validateInput() {
     const { email, password } = this.state;
-    console.log('hdhhddh', password);
 
     if(email === '' || password === '') {
       const error = { 
@@ -56,7 +54,6 @@ class SignUp extends Component {
 
   handleErrors(errors) {
     const { GraphqlErros } = errors;
-    console.log(GraphqlErros);
   }
 
   handleSubmit = async () => {

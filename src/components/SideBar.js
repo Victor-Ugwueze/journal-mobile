@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, AsyncStorage } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Logo from '../img/logo.png';

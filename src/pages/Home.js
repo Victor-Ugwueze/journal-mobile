@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';  
 import Icon from 'react-native-vector-icons/FontAwesome';
+import ListDiary from '../components/ListDiary';
 
 
 
 export default class Home extends Component {
-
   constructor(props) {
     super(props)
     Navigation.events().bindComponent(this);
@@ -16,11 +16,12 @@ export default class Home extends Component {
 			topBar: {
 				leftButtons: [
 					{
-						id: 'settingsButton',
+						id: 'toggleMenu',
 						icon: src,
 					},
-				],
-			},
+        ],
+        searchBar: true,
+			}, 
 		})
 	);
   }
@@ -29,7 +30,7 @@ export default class Home extends Component {
     Navigation.mergeOptions('sideMenu', {
       sideMenu: {
         left: {
-          visible : buttonId === 'settingsButton'
+          visible : buttonId === 'toggleMenu'
         }
       }
     });
@@ -38,7 +39,7 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text> Welcome to DashBoard </Text>
+       <ListDiary />
         <TouchableOpacity 
           activeOpacity={0.5} 
           style={styles.TouchableOpacityStyle}

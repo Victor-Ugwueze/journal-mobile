@@ -1,4 +1,5 @@
 import ApolloClient from 'apollo-boost';
+import { Platform } from 'react-native';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import Initializing from './pages/Initializing';
@@ -9,7 +10,7 @@ import apolloProvide from './hoc/apolloProvider';
 
 
 const client = new ApolloClient({
-  uri: 'http://10.0.2.2:4000/graphql',
+  uri: Platform.OS === 'ios' ? 'http://127.0.0.1:4000/graphql' : 'http://10.0.2.2:4000/graphql',
 });
 
 

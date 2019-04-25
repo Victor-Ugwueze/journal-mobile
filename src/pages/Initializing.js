@@ -9,14 +9,12 @@ export default class Initializing extends Component {
   async componentDidMount() {
     try {
       const user = await AsyncStorage.getItem('token');
-      console.log('user: ', user);
       if (user) {
         redirectHome();
       } else {
         redirectToAuth();
       }
     } catch (err) {
-      console.log('error: ', err);
       redirectToAuth();
     }
   }

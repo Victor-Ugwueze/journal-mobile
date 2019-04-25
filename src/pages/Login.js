@@ -10,7 +10,8 @@ import { Text,
   Image,
   Keyboard,
   Alert,
-  AsyncStorage
+  AsyncStorage,
+  Platform
 } from 'react-native';
 import { Navigation } from 'react-native-navigation';
 import backgroundImage from '../img/background.jpg';
@@ -36,8 +37,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
   validateInput() {
     const { email, password } = this.state;
-    console.log('hdhhddh', password);
-
     if(email === '' || password === '') {
       const error = { 
         message: 'email and password field is required'
@@ -60,8 +59,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
   }
 
   handleErrors(errors) {
-    const { GraphqlErros } = errors;
-    console.log(GraphqlErros);
+    const { GraphqlErrors } = errors;
   }
 
   handleSubmit = async () => {
@@ -98,20 +96,22 @@ import Icon from 'react-native-vector-icons/FontAwesome';
       </View>
           <View style={styles.form}>
             <View style={styles.searchSection}>
-              <Icon style={styles.searchIcon} name="envelope-square" color="white" size={20} color="#000"/>
+              <Icon style={styles.searchIcon} name="envelope-square" size={20} color="#FFF"/>
               <TextInput 
                 onChangeText={input => this.handleInputChange(input, 'email')}
-                placeholder="Email" 
+                placeholder="Email"
                 style={styles.textInput}
+                autoCapitalize="none"
                 placeholderTextColor="#FFF"
               />
             </View>
             <View style={styles.searchSection}>
-              <Icon style={styles.searchIcon} name="lock" size={20} color="#000"/>
+              <Icon style={styles.searchIcon} name="lock" size={20} color="#FFF"/>
               <TextInput 
                 onChangeText={input => this.handleInputChange(input, 'password')}
                 placeholder="Password" 
                 style={styles.textInput}
+                autoCapitalize="none"
                 placeholderTextColor="#FFF"
               />
             </View>
@@ -133,6 +133,7 @@ export default graphql(loginMutation, { name: 'loginMutation'})(Login);
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    marginTop: 50,
     backgroundColor: 'rgba(32,36,100,0.6)',
     justifyContent: 'center',
     height: '100%'
@@ -153,10 +154,11 @@ const styles = StyleSheet.create({
   textInput: {
     height: 50,
     borderBottomWidth: 1,
-    textAlign: 'center',
     marginTop: 10,
+    marginLeft: 40,
     fontSize: 18,
     borderRadius: 4,
+    color: '#FFF',
     borderColor: '#1c262f', //7a42f4
   },
   loginButton: {

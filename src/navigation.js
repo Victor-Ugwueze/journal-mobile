@@ -53,12 +53,12 @@ export const redirectHome = () => Navigation.setRoot({
               id: "AppRoot",
               children: [
                   {
-                      component: {
-                          id: "App",
-                          name: "HomeScreen"
-                      }
+                    component: {
+                      id: "App",
+                      name: "HomeScreen"
+                    }
                   }
-              ]
+              ],
             }
         }
     }
