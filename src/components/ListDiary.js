@@ -55,13 +55,13 @@ export default class ListDiary extends Component {
   }
   
   render() {
+    const { handleEdit } = this.props;
+
     return (
       <View style={styles.container}>
         <FlatList
-        //  ItemSeparatorComponent={({highlighted}) => this.renderSeparator(highlighted)}
-          style={{marginBottom: 2}}
           data={data}
-          renderItem={({item})  => <DiaryItem item={item} />}
+          renderItem={({item})  => <DiaryItem item={item} handleEdit={handleEdit}/>}
           keyExtractor={( item ) => item.id}
         />
       </View>

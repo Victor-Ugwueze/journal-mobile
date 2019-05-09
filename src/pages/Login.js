@@ -1,24 +1,18 @@
-import gql from 'graphql-tag';
 import {  graphql  } from 'react-apollo';
 import React, { Component } from 'react';
 import { Text, 
   View, 
   StyleSheet, 
-  TextInput, 
-  TouchableOpacity, 
-  ImageBackground, 
-  Image,
   Keyboard,
-  Alert,
-  AsyncStorage,
-  Platform
+  Image
 } from 'react-native';
-import { Navigation } from 'react-native-navigation';
-import backgroundImage from '../img/background.jpg';
-import Logo from '../img/logo.png';
+import AsyncStorage from '@react-native-community/async-storage';
 import { loginMutation } from '../schemas';
 import { redirectHome } from '../navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import AppInput from '../components/inputs/AppInput';
+import ButtonIndicator from '../components/buttons/ButtonIndicator';
+import Logo from '../img/logo.png'
+
 
 
  class Login extends Component {
@@ -26,7 +20,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
   state = {
     email: '',
     password: '',
-    inputErrors: []
+    errors: [],
+    isSubmitting: false,
+    authFailure: false
   }
 
   handleInputChange = (value, target) => {
@@ -47,83 +43,77 @@ import Icon from 'react-native-vector-icons/FontAwesome';
     }
   }
 
-  showErrorAlert() {
-    Alert.alert('Error', errors[0].message, 
-    [
-      {
-        text: 'Ok',
-        onPress: () => console.log('Ask me later pressed')
-      }
-    ]
-  )
-  }
-
   handleErrors(errors) {
     const { GraphqlErrors } = errors;
+  }
+
+  handleDisableButton(isSubmitting) {
+    this.setState({
+      isSubmitting
+    })
   }
 
   handleSubmit = async () => {
     Keyboard.dismiss();
     const { loginMutation } = this.props;
-    const { email, password, inputErrors } = this.state;
-
-    this.validateInput();
-    if(inputErrors.length) {
-      this.showErrorAlert();
-      this.setState({ inputErrors: [] });
-      return;
+    const { email, password } = this.state;
+    this.handleDisableButton(true);
+    console.log('hahahahahahah')
+    this.setState({ authFailure: false })
+    try {
+      const { 
+        data: { login: { token, errors  } } } = await loginMutation({
+          variables: {
+            email,
+            password
+          }
+        });
+        AsyncStorage.setItem('token', token);
+        redirectHome();
+    } catch (error) {
+      this.setState({ authFailure: true })
     }
-    const { 
-      data: { login: { token, id } }, errors } = await loginMutation({
-        variables: {
-          email,
-          password
-        }
-      });
-      // this.handleErrors(errors);
-      console.log(errors);
+    this.handleDisableButton(false);
 
-    AsyncStorage.setItem('token', token);
-    redirectHome();
   }
 
   render() {
+    const { errors, isSubmitting, authFailure, email, password } = this.state;
     return (
-      <ImageBackground source={backgroundImage} style={styles.backgroundImage} resizeMode="stretch">
     <View style={styles.container}>
-      <View style={styles.logo}>
-          <Image source={Logo} style={{width: 40, height: 40}}/>
-      </View>
+          <Text style={styles.welcomeText}>Login and enjoy your stuff </Text>
+          <Image source={Logo} style={styles.logo}/>
           <View style={styles.form}>
+            {
+              authFailure 
+              && <Text style={styles.loginTextError}>Incorrect Email/Password</Text>
+            }
             <View style={styles.searchSection}>
-              <Icon style={styles.searchIcon} name="envelope-square" size={20} color="#FFF"/>
-              <TextInput 
+              <AppInput 
                 onChangeText={input => this.handleInputChange(input, 'email')}
                 placeholder="Email"
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholderTextColor="#FFF"
+                errors={errors}
+                label="Email"
+                showLabel={email !== ''}
               />
             </View>
             <View style={styles.searchSection}>
-              <Icon style={styles.searchIcon} name="lock" size={20} color="#FFF"/>
-              <TextInput 
+              <AppInput 
                 onChangeText={input => this.handleInputChange(input, 'password')}
                 placeholder="Password" 
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholderTextColor="#FFF"
+                errors={errors}
+                showLabel={password !== ''}
+                label="Password"
               />
             </View>
-            <TouchableOpacity 
-              style={styles.loginButton}
-              onPress={this.handleSubmit}
-            >
-              <Text style={styles.loginButtonText}>Login</Text>
-            </TouchableOpacity>
+            <ButtonIndicator 
+              disabled={isSubmitting}
+              text="Login"
+              style={{}}
+              onPress={() => this.handleSubmit()}
+            />
           </View>
         </View>
-      </ImageBackground>
     );
   }
 }
@@ -133,18 +123,24 @@ export default graphql(loginMutation, { name: 'loginMutation'})(Login);
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    flex: 1,
     marginTop: 50,
-    backgroundColor: 'rgba(32,36,100,0.6)',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     height: '100%'
   },
-  logo: {
-    position: 'absolute',
-    top: 10,
-    
+  welcomeText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  searchSection: {
-
+  form: {
+    width: '100%',
+  },
+  logo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
   },
   searchIcon: {
     position: 'absolute',
@@ -155,19 +151,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 1,
     marginTop: 10,
-    marginLeft: 40,
     fontSize: 18,
     borderRadius: 4,
     color: '#FFF',
-    borderColor: '#1c262f', //7a42f4
-  },
-  loginButton: {
-    backgroundColor: '#1c262f',
-    marginTop: 10,
-    alignItems: 'center',
-    height: 50,
-    borderRadius: 4,
-    justifyContent: 'center',
+    borderColor: '#1c262f', 
   },
   loginButtonText: {
     color: '#FFF',
@@ -181,5 +168,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: null,
     height: null,    
+  },
+  loginTextError: {
+    color: 'red',
+    textAlign: 'center',
   }
 });

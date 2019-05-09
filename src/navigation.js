@@ -7,18 +7,6 @@ export const redirectToAuth = () => Navigation.setRoot({
       children: [
         {
           component: {
-            name: 'LoginScreen',
-            options: {
-              bottomTab: {
-                fontSize: 12,
-                text: 'Sign In',
-                icon: require('./img/login.png'),
-              },
-            },
-          },
-        },
-        {
-          component: {
             name: 'SignUpScreen',
             options: {
               bottomTab: {
@@ -29,6 +17,19 @@ export const redirectToAuth = () => Navigation.setRoot({
             },
           },
         },
+        {
+          component: {
+            name: 'LoginScreen',
+            options: {
+              bottomTab: {
+                fontSize: 12,
+                text: 'Sign In',
+                icon: require('./img/login.png'),
+              },
+            },
+          },
+        },
+       
       ],
     },
   }

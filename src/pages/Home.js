@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';  
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import ListDiary from '../components/ListDiary';
+
 
 
 
@@ -10,6 +12,9 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     Navigation.events().bindComponent(this);
+    this.state = {
+      sideBarVisible: false,
+    }
 
 	Icon.getImageSource('bars', 32, 'black').then(src =>
 		Navigation.mergeOptions(this.props.componentId, {
@@ -21,17 +26,35 @@ export default class Home extends Component {
 					},
         ],
         searchBar: true,
+        searchBarHiddenWhenScrolling: true,
+        searchBarPlaceholder: 'Search Dairy...'
 			}, 
 		})
 	);
   }
 
   navigationButtonPressed({ buttonId }) {
+
+    if(buttonId === 'toggleMenu'){
+      this.setState({
+        sideBarVisible: !this.state.sideBarVisible
+      })
+    }
+
+
     Navigation.mergeOptions('sideMenu', {
       sideMenu: {
         left: {
-          visible : buttonId === 'toggleMenu'
+          visible : this.state.sideBarVisible
         }
+      }
+    });
+  }
+
+  handleEdit = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'CreateDiaryScreen',
       }
     });
   }
@@ -39,14 +62,17 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-       <ListDiary />
+       <ListDiary handleEdit={this.handleEdit}/>
         <TouchableOpacity 
           activeOpacity={0.5} 
           style={styles.TouchableOpacityStyle}
           onPress={() => Navigation.push(this.props.componentId, {
             component: {
               name: 'CreateDiaryScreen',
-            }
+              passProps: {
+                title: 'Create Entry'
+              },
+            },
           })}
         >
             <Icon name="plus-circle"  style={styles.FloatingButtonStyle} size={40} color="#f06595"/>

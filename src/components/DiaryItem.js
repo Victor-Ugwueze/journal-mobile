@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class DiaryItem extends Component {
   render() {
-    const { title, body } = this.props.item;
+    const { item: { title, body }, handleEdit } = this.props;
     return (
       <View>
         <TouchableOpacity style={styles.container}>
@@ -16,7 +16,10 @@ export default class DiaryItem extends Component {
               <Text>{body}...</Text>  
             </View>
             <View style={styles.actionButtonIcons}>
-              <TouchableOpacity style={styles.icon}>
+              <TouchableOpacity 
+                style={styles.icon}
+                onPress={handleEdit}
+              >
                 <Icon name="edit" color="#000" size={18}></Icon>
               </TouchableOpacity>
               <Text>|</Text>
