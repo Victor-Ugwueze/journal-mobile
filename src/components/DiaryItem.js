@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class DiaryItem extends Component {
+  handleEdit = () => {
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'CreateDiaryScreen',
+      }
+    });
+  }
+
   render() {
-    const { item: { title, body }, handleEdit } = this.props;
+    const { item: { title, body } } = this.props;
     return (
       <View>
         <TouchableOpacity style={styles.container}>
@@ -18,7 +27,7 @@ export default class DiaryItem extends Component {
             <View style={styles.actionButtonIcons}>
               <TouchableOpacity 
                 style={styles.icon}
-                onPress={handleEdit}
+                onPress={() => this.handleEdit()}
               >
                 <Icon name="edit" color="#000" size={18}></Icon>
               </TouchableOpacity>

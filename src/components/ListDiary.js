@@ -1,67 +1,47 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, StyleSheet, Platform } from 'react-native';
+import { Text, View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import {  graphql  } from 'react-apollo';
+
 import DiaryItem from './DiaryItem';
+import { listAllEntries } from '../schemas';
 
 
-const data = [
-  {
-    id: "1",
-    title: 'The title of this',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "2",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "3",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "4",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "5",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "6",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "7",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  {
-    id: "8",
-    title: 'The first',
-    body: 'This is the story of a girl that has the man'
-  },
-  
-]
-
-export default class ListDiary extends Component {
+class ListDiary extends Component {
   renderSeparator (highlighted) {
     return (
       <View style={styles.separator} /> 
     );
   }
+
+  renderEmptyComponent () {
+    return (
+      <View style={styles.noDataView}>
+        <Text>You have no entries</Text>
+      </View>
+    )
+  }
   
   render() {
-    const { handleEdit } = this.props;
-
+    const { entries: { loading, listAllEntries, refetch }, entryCreated } = this.props;
+    if(entryCreated) {
+      refetch();
+    }
+  
+    if (loading) {
+      return (
+        <ActivityIndicator 
+          size="large"
+          color="#00ff00"
+      />
+      )
+    } 
     return (
       <View style={styles.container}>
         <FlatList
-          data={data}
-          renderItem={({item})  => <DiaryItem item={item} handleEdit={handleEdit}/>}
+          contentContainerStyle={{ flexGrow: 1 }}
+          data={listAllEntries}
+          ListEmptyComponent={this.renderEmptyComponent}
+          renderItem={({item})  => <DiaryItem item={item} />}
           keyExtractor={( item ) => item.id}
         />
       </View>
@@ -69,12 +49,19 @@ export default class ListDiary extends Component {
   }
 }
 
+export default graphql(listAllEntries, { name: 'entries'})(ListDiary)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 8,
     justifyContent: 'center',
     borderColor: '#d6d7da',
+  },
+  noDataView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   separator: {
       height: 1,

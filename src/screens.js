@@ -26,23 +26,22 @@ cache.writeData({
 
 export default async function registerComponents(Navigation) {
   const token = await    await AsyncStorage.getItem('token');
-  console.log(token);
-    const client = new ApolloClient({
-      uri: Platform.OS === 'ios' 
-      ? 'http://127.0.0.1:4000/graphql' 
-      : 'http://10.0.2.2:4000/graphql',
-      cache,
-      headers: {
-        authorization: token
-      },
-      resolvers: {
-      }
-    });
+  const client = new ApolloClient({
+    uri: Platform.OS === 'ios' 
+    ? 'http://127.0.0.1:4000/graphql' 
+    : 'http://10.0.2.2:4000/graphql',
+    cache,
+    headers: {
+      authorization: token
+    },
+    resolvers: {
+    }
+  });
 
-      Navigation.registerComponent('InitializingScreen', () => apolloProvide(Initializing, client));
-      Navigation.registerComponent('LoginScreen', () => apolloProvide(Login, client));
-      Navigation.registerComponent('SignUpScreen', () => apolloProvide(SignUp, client));
-      Navigation.registerComponent('HomeScreen', () => apolloProvide(Home, client));
-      Navigation.registerComponent('CreateDiaryScreen', () => apolloProvide(CreateDiary, client));
-      Navigation.registerComponent('navigation.Drawer', () => SideMenu);
+  Navigation.registerComponent('InitializingScreen', () => apolloProvide(Initializing, client));
+  Navigation.registerComponent('LoginScreen', () => apolloProvide(Login, client));
+  Navigation.registerComponent('SignUpScreen', () => apolloProvide(SignUp, client));
+  Navigation.registerComponent('HomeScreen', () => apolloProvide(Home, client));
+  Navigation.registerComponent('CreateDiaryScreen', () => apolloProvide(CreateDiary, client));
+  Navigation.registerComponent('navigation.Drawer', () => SideMenu);
 }

@@ -4,7 +4,8 @@ import {  graphql  } from 'react-apollo';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createEntryMutation } from '../schemas';
 import AppInput from '../components/inputs/AppInput';
-
+import { redirectHome } from '../navigation';
+import { Navigation } from 'react-native-navigation';  
 
 class CreateDiary extends Component {
   state = {
@@ -62,7 +63,19 @@ class CreateDiary extends Component {
       });
       if(errors.length){
         this.setState({ errors })
+        return;
       }
+      Navigation.push(this.props.componentId, {
+        component: {
+          name: 'HomeScreen',
+          passProps: {
+            entry,
+            message: 'Entry Successfully created',
+            entryCreated: true,
+          }
+        },
+        
+      });
     } catch (error) {
 
     }
@@ -74,7 +87,6 @@ class CreateDiary extends Component {
 
   render() {
     const { errors, isSubmitting} = this.state;
-    console.log(errors, 'errors');
     return (
       <View style={styles.container}>
           <View style={styles.diaryBody}>

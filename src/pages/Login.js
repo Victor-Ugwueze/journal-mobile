@@ -13,8 +13,6 @@ import AppInput from '../components/inputs/AppInput';
 import ButtonIndicator from '../components/buttons/ButtonIndicator';
 import Logo from '../img/logo.png'
 
-
-
  class Login extends Component {
 
   state = {
@@ -57,8 +55,8 @@ import Logo from '../img/logo.png'
     Keyboard.dismiss();
     const { loginMutation } = this.props;
     const { email, password } = this.state;
+    
     this.handleDisableButton(true);
-    console.log('hahahahahahah')
     this.setState({ authFailure: false })
     try {
       const { 

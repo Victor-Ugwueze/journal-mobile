@@ -42,3 +42,15 @@ export const createEntryMutation = gql`
       }
     }
 `; 
+
+export const listAllEntries = gql`
+   query {
+    listAllEntries {
+      id
+      title
+      body
+      createdAt
+      updatedAt
+    }
+  }
+`;

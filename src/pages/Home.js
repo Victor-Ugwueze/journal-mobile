@@ -5,10 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import ListDiary from '../components/ListDiary';
 
-
-
-
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props)
     Navigation.events().bindComponent(this);
@@ -41,7 +38,6 @@ export default class Home extends Component {
       })
     }
 
-
     Navigation.mergeOptions('sideMenu', {
       sideMenu: {
         left: {
@@ -51,18 +47,11 @@ export default class Home extends Component {
     });
   }
 
-  handleEdit = () => {
-    Navigation.push(this.props.componentId, {
-      component: {
-        name: 'CreateDiaryScreen',
-      }
-    });
-  }
-
   render() {
+    const { entryCreated } = this.props;
     return (
       <View style={styles.container}>
-       <ListDiary handleEdit={this.handleEdit}/>
+       <ListDiary entryCreated={entryCreated}/>
         <TouchableOpacity 
           activeOpacity={0.5} 
           style={styles.TouchableOpacityStyle}
@@ -97,4 +86,6 @@ const styles = StyleSheet.create({
     right: 30,
     bottom: 30,
   },
-})
+});
+
+export default Home;
