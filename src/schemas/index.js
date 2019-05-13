@@ -54,3 +54,17 @@ export const listAllEntries = gql`
     }
   }
 `;
+
+export const updateEntryMutation = gql`
+  mutation updateEntry($input: UpdateEntryInput!){
+  updateEntry(input: $input) {
+    errors{
+      field
+      message
+    }
+    entry{
+      id
+    }
+  }
+}
+`;

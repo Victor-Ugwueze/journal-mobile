@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput, Keyboard, ActivityIndicator } from 'react-native';
-import {  graphql  } from 'react-apollo';
+import {  graphql, compose  } from 'react-apollo';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createEntryMutation } from '../schemas';
+import { createEntryMutation, updateEntryMutation } from '../schemas';
 import AppInput from '../components/inputs/AppInput';
-import { redirectHome } from '../navigation';
 import { Navigation } from 'react-native-navigation';  
 
 class CreateDiary extends Component {
@@ -38,46 +37,80 @@ class CreateDiary extends Component {
     }
   }
 
-  handleTextChange = (value, target) => {
-    this.setState({
-      [target]: value
-    });
-    this.clearErrorOnInputChanged(target);
+  componentDidMount() {
+    const { entry, mode } = this.props;
+    if(mode === 'edit') {
+      this.setState({
+        title: entry.title,
+        body: entry.body,
+        id: entry.id,
+        mode: 'edit'
+      });
+    }
   }
+
+  handleTextChange = (input) => {
+    this.setState({
+      [input.target]: input.value
+    });
+    this.clearErrorOnInputChanged(input.target);
+  }
+
+  redirectToHome(entry, errors) {
+    if(errors.length){
+      this.setState({ errors })
+      return;
+    }
+    Navigation.push(this.props.componentId, {
+      component: {
+        name: 'HomeScreen',
+        passProps: {
+          entry,
+          message: 'Entry Successfully created',
+          entryCreated: true,
+        },
+      },
+    });
+  }
+
+  async create () {
+    const { title, body, mode, id } = this.state;
+    const { createEntryMutation, updateEntryMutation } = this.props;
+
+    let mutationAction = input => createEntryMutation(input);
+    let mutation = 'createEntry';
+    if(mode === 'edit') {
+      mutationAction = input => updateEntryMutation(input);
+      mutation = 'updateEntry'
+    }
+
+    const { data: { [mutation]: { entry, errors } } } = await mutationAction({ 
+      variables: { 
+        input: { 
+          title,
+          body,
+          id,
+          mode,
+        }
+      }
+    });
+    return {
+      entry,
+      errors,
+    };
+  }
+
 
   handleSubmit = async () => {
     Keyboard.dismiss();
-    const { createEntryMutation } = this.props;
     this.setState({
       isSubmitting: true
-    })
-    const { title, body } = this.state;
+    });
     try {
-      const { data: { createEntry: { entry, errors } } } = await createEntryMutation({ 
-        variables: { 
-          input: { 
-            title, 
-            body 
-          } 
-        } 
-      });
-      if(errors.length){
-        this.setState({ errors })
-        return;
-      }
-      Navigation.push(this.props.componentId, {
-        component: {
-          name: 'HomeScreen',
-          passProps: {
-            entry,
-            message: 'Entry Successfully created',
-            entryCreated: true,
-          }
-        },
-        
-      });
+     const { errors, entry } = await this.create();
+     this.redirectToHome(entry, errors);
     } catch (error) {
-
+      console.log(error);
     }
     this.setState({
       isSubmitting: false
@@ -86,7 +119,8 @@ class CreateDiary extends Component {
 
 
   render() {
-    const { errors, isSubmitting} = this.state;
+    const { errors, isSubmitting, title, body } = this.state;
+
     return (
       <View style={styles.container}>
           <View style={styles.diaryBody}>
@@ -106,13 +140,15 @@ class CreateDiary extends Component {
             selectionColor={'gray'}
             label="title"
             errors={errors}
+            value={title}
             showLabel={false}
             placeholder="Title..."
-            onChangeText={value => this.handleTextChange(value, 'title')}
+            onChangeText={value => this.handleTextChange({ target: 'title' , value })}
           />
           <AppInput 
             multiline={true}
             errors={errors}
+            value={body}
             onContentSizeChange={(event) => 
               this.setState({ height: event.nativeEvent.contentSize.height})
           }
@@ -123,7 +159,7 @@ class CreateDiary extends Component {
             selectionColor={'gray'}
             label="body"
             placeholder="description..."
-            onChangeText={value => this.handleTextChange(value, 'body')}
+            onChangeText={value => this.handleTextChange({ value, target: 'body' })}
           />
           </View>
           {
@@ -182,4 +218,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default graphql(createEntryMutation, { name: 'createEntryMutation'})(CreateDiary);
+export default compose(
+  graphql(createEntryMutation, { name: 'createEntryMutation' }),
+  graphql(updateEntryMutation, { name: 'updateEntryMutation' })
+)(CreateDiary);

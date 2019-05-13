@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';  
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import ListDiary from '../components/ListDiary';
 
 class Home extends Component {
@@ -48,7 +47,8 @@ class Home extends Component {
   }
 
   render() {
-    const { entryCreated } = this.props;
+    const { entryCreated, componentId } = this.props;
+    console.log(componentId, 'home');
     return (
       <View style={styles.container}>
        <ListDiary entryCreated={entryCreated}/>

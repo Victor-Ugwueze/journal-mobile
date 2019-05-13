@@ -5,9 +5,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class DiaryItem extends Component {
   handleEdit = () => {
-    Navigation.push(this.props.componentId, {
+    const { item } = this.props;
+    Navigation.push('App', {
       component: {
         name: 'CreateDiaryScreen',
+        passProps: {
+          mode: 'edit',
+          title: 'Edit Entry',
+          entry: {
+            ...item
+          }
+        }
       }
     });
   }
