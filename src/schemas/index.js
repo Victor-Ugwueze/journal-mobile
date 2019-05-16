@@ -27,6 +27,17 @@ export const signUpMutation = gql`
   }
 `; 
 
+export const deleteEntryMutation = gql`
+  mutation deleteEntryMutation($id: ID!) {
+    deleteEntry(id: $id){
+      message,
+      errors{
+        message
+      }
+    }
+  }
+`;
+
 
 export const createEntryMutation = gql`
   mutation createEntryMutation($input: NewEntryInput!){

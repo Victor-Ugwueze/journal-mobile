@@ -2,14 +2,13 @@ import ApolloClient from 'apollo-client';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { onError } from "apollo-link-error";
 import { HttpLink } from 'apollo-link-http';
 import { ApolloLink } from 'apollo-link';
 import apolloProvide from './hoc/apolloProvider';
 import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import Initializing from './pages/Initializing';
-import Home from './pages/Home';
+import Home from './pages/home';
 import SideMenu from './components/SideBar';
 import CreateDiary from './pages/CreateDiary';
 

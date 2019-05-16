@@ -20,6 +20,18 @@ export default class DiaryItem extends Component {
     });
   }
 
+  handleDelete = async () => {
+    const { item: { id }, deleteEntryMutation, refetch } = this.props;
+    try {
+      const { data: { deleteEntry: { message } } } = await deleteEntryMutation({
+        variables: {
+          id
+        }
+      });
+      refetch();
+    } catch (error) {}
+  }
+
   render() {
     const { item: { title, body } } = this.props;
     return (
@@ -40,7 +52,7 @@ export default class DiaryItem extends Component {
                 <Icon name="edit" color="#000" size={18}></Icon>
               </TouchableOpacity>
               <Text>|</Text>
-              <TouchableOpacity style={styles.icon}>
+              <TouchableOpacity style={styles.icon} onPress={this.handleDelete}> 
                 <Icon name="trash" color="#000" size={18}></Icon>
               </TouchableOpacity>
             </View>

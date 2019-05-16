@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import {  graphql  } from 'react-apollo';
+import {  graphql, compose  } from 'react-apollo';
 
 import DiaryItem from './DiaryItem';
-import { listAllEntries } from '../schemas';
+import { listAllEntries, deleteEntryMutation } from '../../schemas';
 
 
 class ListDiary extends Component {
@@ -22,7 +22,17 @@ class ListDiary extends Component {
   }
   
   render() {
-    const { entries: { loading, listAllEntries, refetch }, entryCreated } = this.props;
+    const { 
+      entries: { 
+        loading, 
+        listAllEntries, 
+        refetch
+      }, 
+      entryCreated, 
+      deleteEntryMutation,
+      deleteEntry
+    } = this.props;
+
     if(entryCreated) {
       refetch();
     }
@@ -41,7 +51,13 @@ class ListDiary extends Component {
           contentContainerStyle={{ flexGrow: 1 }}
           data={listAllEntries}
           ListEmptyComponent={this.renderEmptyComponent}
-          renderItem={({item})  => <DiaryItem item={item} />}
+          renderItem={({item})  => (
+            <DiaryItem 
+              item={item} 
+              refetch={refetch} 
+              deleteEntryMutation={deleteEntryMutation}
+            />
+          )}
           keyExtractor={( item ) => item.id}
         />
       </View>
@@ -49,7 +65,10 @@ class ListDiary extends Component {
   }
 }
 
-export default graphql(listAllEntries, { name: 'entries'})(ListDiary)
+export default compose(
+  graphql(listAllEntries, { name: 'entries'}),
+  graphql(deleteEntryMutation, { name: 'deleteEntryMutation'}),
+)(ListDiary);
 
 const styles = StyleSheet.create({
   container: {

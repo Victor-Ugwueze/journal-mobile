@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Navigation } from 'react-native-navigation';  
 import Icon from 'react-native-vector-icons/FontAwesome';
-import ListDiary from '../components/ListDiary';
+import ListDiary from './ListDiary';
 
 class Home extends Component {
   constructor(props) {
