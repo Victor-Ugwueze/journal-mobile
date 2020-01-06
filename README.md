@@ -1,5 +1,6 @@
-### Journal is a web platform that allows a users to manage and organize their thought
+### Journal supports both web and mobile platform that allows a users to manage and organize their thought
 
-## This a mobile solution that allows the users access to their platform without
+## The mobile solution allows users to easily manage and access their journal
 
 
+![Login Screen](login_screen.png);

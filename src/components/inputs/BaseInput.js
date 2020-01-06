@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 });
 
 const BaseInput = ({ children, label, showLabel }) => (
-  <View style={styles.baseInput}>
+  <View style={[styles.baseInput]}>
    {showLabel && <Text>{label}</Text> }
     {children}
   </View>

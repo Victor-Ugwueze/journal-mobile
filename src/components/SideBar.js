@@ -9,7 +9,7 @@ export default class SideBar extends Component {
     AsyncStorage.removeItem('token');
     redirectToAuth();
   }
-  
+
   render() {
     return (
       <View style={styles.container}>
@@ -35,7 +35,7 @@ export default class SideBar extends Component {
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.menuFooter} onPress={this.handleLogout}>
-          <Icon name="sign-out" color="white"size={18} ></Icon>         
+          <Icon name="sign-out" color="white"size={18} ></Icon>
           <Text style={styles.logOutText}>Logout</Text>
         </TouchableOpacity>
       </View>
